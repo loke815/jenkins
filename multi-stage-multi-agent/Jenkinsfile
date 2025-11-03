@@ -18,4 +18,13 @@ pipeline {
       }
     }
   }
+  stage('sql') {
+      agent {
+        docker { image 'mysql:latest' }
+      }
+      steps {
+        sh 'date'
+      }
+    }
+  }
 }
