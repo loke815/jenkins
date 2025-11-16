@@ -12,7 +12,9 @@ pipeline {
         sh '''
           whoami
           id
-          apt install git -y
+          set -xe
+          apt-get update
+          apt-get install -y git
           git --version
         '''
       }
