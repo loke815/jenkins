@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.15.0a1-alpine3.21
 RUN pip install django==3.2
 
 COPY . .
