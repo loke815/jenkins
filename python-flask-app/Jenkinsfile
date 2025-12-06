@@ -21,6 +21,9 @@ pipeline {
                 sh """
                 cp python-flask-app/Dockerfile ./
                 cp python-flask-app/requirements.txt ./
+                cp python-flask-app/style.css ./
+                cp python-flask-app/templates/index.html ./
+                cp python-flask-app/app.py ./
                 docker build -t ${IMAGE_NAME}:${TAG} .
                 """
             }
