@@ -19,7 +19,8 @@ pipeline {
             steps {
                 echo "Building Docker image..."
                 sh """
-                cp -r python-flask-app/ ./
+                cp python-flask-app/Dockerfile ./
+                cp python-flask-app/requirements.txt ./
                 docker build -t ${IMAGE_NAME}:${TAG} .
                 """
             }
