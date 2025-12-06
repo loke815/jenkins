@@ -14,11 +14,12 @@ pipeline {
                 checkout scm
             }
         }
-
+        
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image..."
                 sh """
+                cp python-flask-app/Dockerfile ./
                 docker build -t ${IMAGE_NAME}:${TAG} .
                 """
             }
