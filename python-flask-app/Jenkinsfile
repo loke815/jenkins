@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "my-python-flask-app"
+        TAG = "latest"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "Checking out code..."
+                checkout scm
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo "Building Docker image..."
+                sh """
+                cp python-flask-app/Dockerfile ./
+                cp python-flask-app/requirements.txt ./
+                cp python-flask-app/static/style.css ./
+                cp python-flask-app/templates/index.html ./
+                cp python-flask-app/app.py ./
+                docker build -t ${IMAGE_NAME}:${TAG} .
+                """
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                echo "Running container..."
+                sh """
+                docker run -d -p 5000:5000 --name flaskapp ${IMAGE_NAME}:${TAG}
+                """
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                echo "App should be running at: http://localhost:5000"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline completed!"
+        }
+    }
+}
