@@ -36,7 +36,7 @@ pipeline {
                             cp python-flask-app/static/style.css ./
                             cp python-flask-app/templates/index.html ./
                             cp python-flask-app/app.py ./
-                            docker build -t ${IMAGE_NAME}:${TAG} .
+                            ocker build -t ${IMAGE_NAME}:${TAG} .
                         """
                         echo "Docker image built successfully"
                     } catch (Exception e) {
