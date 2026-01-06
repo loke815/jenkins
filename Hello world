@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Check Java') {
+            steps {
+                sh 'java -version'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh 'javac HelloWorld.java'
+            }
+        }
+
+        stage('Run') {
+            steps {
+                sh 'java HelloWorld'
+            }
+        }
+    }
+}
