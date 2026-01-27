@@ -141,7 +141,9 @@ sudo systemctl stop jenkins
 ```
 sudo nano /etc/nginx/sites-available/jenkins
 ```
+
 ###If you are accessing Jenkins via ipAddress
+
 ```
 server {
     listen 80;
@@ -180,7 +182,9 @@ server {
     }
 }
 ```
+
 ###If you are accessing Jenkins via domain
+
 ```
 server {
     listen 80;
@@ -219,11 +223,15 @@ sudo nginx -t
 sudo systemctl reload nginx
 sudo systemctl restart nginx
 ```
+
 ###Verify Jenkins is listening locally
+
 ```
 ss -tulnp | grep 8080
 ```
+
 ###Use GET instead of HEAD
+
 ```
 curl -v http://localhost/login
 ```
