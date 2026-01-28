@@ -148,6 +148,7 @@ sudo nano /etc/nginx/sites-available/jenkins
 server {
     listen 80;
     server_name 20.38.37.143;
+#(change ip to current ip address)
 
     access_log /var/log/nginx/jenkins.access.log;
     error_log  /var/log/nginx/jenkins.error.log;
