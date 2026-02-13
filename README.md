@@ -131,6 +131,115 @@ http://<ec2-instance-public-ip>:8080/restart
 
 The docker agent configuration is now successful.
 
+# If you get reverse proxy issues
+
+```
+sudo systemctl stop jenkins
+```
+```
+sudo nano /etc/nginx/sites-available/jenkins
+```
+
+###If you are accessing Jenkins via ipAddress
+
+```
+server {
+    listen 80;
+    server_name 20.38.37.143;
+#(change ip to current ip address)
+
+    access_log /var/log/nginx/jenkins.access.log;
+    error_log  /var/log/nginx/jenkins.error.log;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+
+        # Preserve client & host info
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Required for Jenkins
+        proxy_set_header X-Forwarded-Port $server_port;
+
+        # WebSocket support (important)
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        # Disable redirects
+        proxy_redirect off;
+
+        # Timeouts (prevents random failures)
+        proxy_connect_timeout 90;
+        proxy_send_timeout 90;
+        proxy_read_timeout 90;
+
+        # Buffering off for Jenkins
+        proxy_buffering off;
+    }
+}
+```
+
+###If you are accessing Jenkins via domain
+
+```
+server {
+    listen 80;
+    server_name jenkins.company.com;
+
+    access_log /var/log/nginx/jenkins.access.log;
+    error_log  /var/log/nginx/jenkins.error.log;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port 80;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_redirect off;
+        proxy_buffering off;
+    }
+}
+```
+```
+sudo ln -s /etc/nginx/sites-available/jenkins /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+```
+```
+sudo nginx -t
+```
+```
+sudo systemctl reload nginx
+sudo systemctl restart nginx
+```
+
+###Verify Jenkins is listening locally
+
+```
+ss -tulnp | grep 8080
+```
+
+###Use GET instead of HEAD
+
+```
+curl -v http://localhost/login
+```
+Manage Jenkins → Configure System
+Jenkins URL: http://<server-ip>/
+
+Manage Jenkins → security -->csrp protection--> enabled proxy compactibility
+
+
 
 
 
